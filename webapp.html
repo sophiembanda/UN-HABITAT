@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cities Investment Facility Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }
+    .card { background: white; border-radius: 8px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 2px 6px rgba(0,0,0,0.2);}
+    h2 { margin-top: 0; }
+    input, select, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #0077cc; color: white; border: none; cursor: pointer; }
+    button:hover { background: #005fa3; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    let user = null;
+    let expenditure = "0";
+    let status = "Not Started";
+
+    const app = document.getElementById("app");
+
+    function renderLogin() {
+      app.innerHTML = `
+        <div class="card">
+          <h2>Login / Sign Up</h2>
+          <input id="username" placeholder="Username"/>
+          <input id="password" placeholder="Password" type="password"/>
+          <select id="role">
+            <option value="unhabitat">UN-Habitat</option>
+            <option value="donor">Donor</option>
+            <option value="government">Government Authority</option>
+          </select>
+          <button onclick="login()">Login</button>
+        </div>
+      `;
+    }
+
+    function login() {
+      const role = document.getElementById("role").value;
+      user = role;
+      renderApp();
+    }
+
+    function logout() {
+      user = null;
+      renderLogin();
+    }
+
+    function renderApp() {
+      if (user === "unhabitat") {
+        app.innerHTML = `
+          <div class="card">
+            <h2>UN-Habitat Dashboard</h2>
+            <label>Project Expenditure</label>
+            <input id="expInput" value="${expenditure}" onchange="updateExpenditure(this.value)"/>
+            <p><b>Current Expenditure:</b> ${expenditure}</p>
+
+            <label>Project Status</label>
+            <input id="statusInput" value="${status}" onchange="updateStatus(this.value)"/>
+            <p><b>Current Status:</b> ${status}</p>
+
+            <button onclick="logout()">Logout</button>
+          </div>
+        `;
+      }
+      if (user === "donor") {
+        app.innerHTML = `
+          <div class="card">
+            <h2>Donor Dashboard</h2>
+            <p><b>Project Expenditure:</b> ${expenditure}</p>
+            <button onclick="logout()">Logout</button>
+          </div>
+        `;
+      }
+      if (user === "government") {
+        app.innerHTML = `
+          <div class="card">
+            <h2>Government Authority Dashboard</h2>
+            <p><b>Project Status:</b> ${status}</p>
+            <button onclick="logout()">Logout</button>
+          </div>
+        `;
+      }
+    }
+
+    function updateExpenditure(val) { expenditure = val; renderApp(); }
+    function updateStatus(val) { status = val; renderApp(); }
+
+    // start
+    renderLogin();
+  </script>
+</body>
+</html>
